@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 const data = require('./questions');
 const cours = require('./cours');
+const { assurerColonnes } = require('./migrer');
 
 const IMG = '/img/questions/';
 
@@ -17,6 +18,8 @@ const IMG = '/img/questions/';
     contenu MEDIUMTEXT NOT NULL,
     FOREIGN KEY (theme_id) REFERENCES theme(id) ON DELETE CASCADE)`);
 
+  await assurerColonnes();
+
   let ajoutees = 0;
   for (const t of data) {
     const [r] = await db.query(
@@ -26,7 +29,8 @@ const IMG = '/img/questions/';
     for (const q of t.questions) {
       const [[existe]] = await db.query('SELECT id FROM question WHERE enonce = ? AND theme_id = ?', [q.enonce, themeId]);
       if (existe) {
-        await db.query('UPDATE question SET image = ?, explication = ? WHERE id = ?', [IMG + q.image, q.explication, existe.id]);
+        // Une photo téléchargée (ou une image envoyée via l'admin) n'est jamais remplacée par le dessin
+        await db.query("UPDATE question SET explication = ?, image = IF(image IS NULL OR image LIKE '/img/questions/%', ?, image) WHERE id = ?", [q.explication, IMG + q.image, existe.id]);
         continue;
       }
       const [qr] = await db.query('INSERT INTO question(theme_id, enonce, explication, image) VALUES (?, ?, ?, ?)', [themeId, q.enonce, q.explication, IMG + q.image]);

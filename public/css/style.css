@@ -18,7 +18,7 @@ body {
   margin: 0; min-height: 100vh; color: var(--noir); font-family: var(--texte); line-height: 1.55;
   background:
     linear-gradient(90deg, rgba(95, 227, 234, .78) 0%, rgba(47, 149, 207, .72) 50%, rgba(10, 63, 168, .85) 100%),
-    url("/img/hero-route.jpg") center / cover no-repeat fixed;
+    url("/img/fond-accueil.jpg") center / cover no-repeat fixed;
 }
 /* Pages de questions : fond blanc */
 body.quiz { background: #fff; }
@@ -119,6 +119,13 @@ fieldset { border: 3px solid #000; border-radius: 10px; padding: .8rem 1rem; }
 .question { background: #fff; border: 3px solid #000; border-radius: 22px; overflow: hidden; }
 .media { height: clamp(180px, 36vh, 300px); background: #1d2b3a; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .media img { display: block; height: 100%; width: auto; max-width: 100%; object-fit: contain; }
+.credit { margin: 0; padding: .25rem .8rem; background: #1d2b3a; text-align: right; font-size: .75rem; }
+.credit a { color: #cfd8e3; }
+.vignette { margin: 0; align-self: start; }
+.credit-photo { font-size: .75rem; margin-top: .3rem; color: var(--discret); }
+.corrige .illustration { display: block; }
+.pied a { color: #fff; }
+.quiz .pied a { color: var(--discret); }
 .sans-image { color: #fff; font-family: var(--titre); font-size: 1.4rem; }
 .corps { padding: 1rem 1.5rem 1.6rem; }
 .compteur { font-family: var(--titre); margin: 0; font-size: 1rem; }

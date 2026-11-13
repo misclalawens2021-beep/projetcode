@@ -154,7 +154,7 @@ router.get('/tentative/:id', requireLogin, wrap(async (req, res) => {
     return res.redirect(`/tentative/${t.id}/resultat`);
   }
   const [qs] = await db.query(
-    'SELECT q.id, q.enonce, q.image FROM tentative_question tq JOIN question q ON q.id = tq.question_id WHERE tq.tentative_id = ? ORDER BY tq.position', [t.id]);
+    'SELECT q.id, q.enonce, q.image, q.credit, q.credit_url FROM tentative_question tq JOIN question q ON q.id = tq.question_id WHERE tq.tentative_id = ? ORDER BY tq.position', [t.id]);
   const [rs] = await db.query('SELECT id, question_id, libelle FROM reponse WHERE question_id IN (?) ORDER BY id', [qs.map((q) => q.id)]);
   const [sv] = await db.query('SELECT question_id, reponse_id FROM reponse_donnee WHERE tentative_id = ?', [t.id]);
   const saved = {};
@@ -207,7 +207,7 @@ router.get('/tentative/:id/resultat', requireLogin, wrap(async (req, res) => {
   if (!t) return res.status(404).render('erreur', { message: 'Tentative introuvable.' });
   if (!t.fin) return res.redirect(`/tentative/${t.id}`);
   const [qs] = await db.query(
-    `SELECT tq.position, tq.reussie, q.id, q.enonce, q.image, q.explication
+    `SELECT tq.position, tq.reussie, q.id, q.enonce, q.image, q.credit, q.credit_url, q.explication
      FROM tentative_question tq JOIN question q ON q.id = tq.question_id
      WHERE tq.tentative_id = ? ORDER BY tq.position`, [t.id]);
   const [rs] = await db.query(

@@ -20,7 +20,7 @@
 <h2 class="titre-centre">Correction</h2>
 <% qs.forEach(q => { %>
   <article class="corrige <%= q.reussie ? 'corrige-ok' : 'corrige-ko' %>">
-    <% if (q.image) { %><img class="illustration" src="<%= q.image %>" alt="Illustration de la question"><% } %>
+    <% if (q.image) { %><figure class="vignette"><img class="illustration" src="<%= q.image %>" alt="Illustration de la question"><% if (q.credit) { %><figcaption class="credit-photo"><a href="<%= q.credit_url || 'https://www.pexels.com' %>" target="_blank" rel="noopener noreferrer"><%= q.credit %></a></figcaption><% } %></figure><% } %>
     <div>
       <h3>Question <%= q.position %> – <%= q.reussie ? 'réussie' : 'ratée' %></h3>
       <p class="enonce"><%= q.enonce %></p>
