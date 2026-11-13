@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= title %> – Code Route</title>
+  <title><%= title %> – Code de la route</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="icon" href="/img/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body<%- typeof accueil !== 'undefined' && accueil ? ' class="accueil"' : '' %>>
+<body<%- typeof quiz !== 'undefined' && quiz ? ' class="quiz"' : (typeof accueil !== 'undefined' && accueil ? ' class="accueil"' : '') %>>
 <header class="entete">
-  <a class="logo" href="/"><img src="/img/logo.svg" alt="" width="44" height="44"><span>Code Route</span></a>
+  <a class="logo" href="/"><img src="/img/logo.svg" alt="" width="44" height="44"><span>Code de la route</span></a>
   <nav class="menu" aria-label="Navigation principale">
     <a href="/cours">Cours</a>
     <a href="/exercices">Exercices</a>

@@ -1,4 +1,4 @@
-<%- include('partials/header', { title: t.type === 'examen' ? 'Examen blanc' : 'Exercice' }) %>
+<%- include('partials/header', { title: t.type === 'examen' ? 'Examen blanc' : 'Exercice', quiz: true }) %>
 <div class="quiz-tete">
   <h1><%= t.type === 'examen' ? 'Examen blanc' : 'Exercice' %></h1>
   <% if (t.duree_max_sec) { %><p class="minuteur" id="minuteur" aria-live="off">--:--</p><% } %>
