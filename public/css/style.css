@@ -61,7 +61,7 @@ h3 { font-size: 1.15rem; margin: 0 0 .4rem; }
 .hero-texte p { font-size: 1.2rem; font-weight: 600; margin: .8rem 0; }
 .hero-texte .actions { margin: 2rem 0 1rem; }
 .chiffres-hero { font-size: 1rem !important; }
-.hero-image { width: 100%; display: block; border: 5px solid var(--violet); background: #fff; aspect-ratio: 16 / 10; object-fit: cover; object-position: center; }
+.hero-image { width: 100%; display: block; border: 5px solid var(--violet); border-radius: 20px; background: #fff; aspect-ratio: 16 / 10; object-fit: cover; object-position: center; }
 
 .accueil .hero-texte { background: rgba(255, 255, 255, .85); border: 3px solid var(--noir); border-radius: 26px; padding: 2rem 1.5rem; }
 

@@ -1,4 +1,13 @@
 </main>
-<footer class="pied">Questions et cours rédigés pour ce site. Ils ne remplacent pas les sujets officiels de l'examen. Certaines photos proviennent de <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer">Pexels</a>.</footer>
+<footer class="pied">
+    Questions et cours rédigés pour ce site. Ils ne remplacent pas les sujets officiels de l'examen. Certaines photos proviennent de <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer">Pexels</a>.
+    <p>&copy; <span id="year"></span> Code de la route</p>
+</footer>
+<script>
+    const year = document.getElementById('year');
+    if (year){
+        year.textContent = new Date().getFullYear();
+    }
+</script>
 </body>
 </html>
