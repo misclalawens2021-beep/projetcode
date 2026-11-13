@@ -1,0 +1,29 @@
+<%- include('../partials/header', { title: 'Question', carte: true }) %>
+<h1><%= question.id ? 'Modifier la question' : 'Nouvelle question' %></h1>
+<% if (erreur) { %><p class="flash flash-ko" role="alert"><%= erreur %></p><% } %>
+<form class="formulaire" method="post" enctype="multipart/form-data" action="/admin/questions<%= question.id ? '/' + question.id : '' %>">
+  <label>Thème
+    <select name="theme_id" required>
+      <option value="">Choisir…</option>
+      <% themes.forEach(t => { %><option value="<%= t.id %>" <%= String(t.id) === String(question.theme_id) ? 'selected' : '' %>><%= t.nom %></option><% }) %>
+    </select>
+  </label>
+  <label>Énoncé<textarea name="enonce" rows="3" required><%= question.enonce %></textarea></label>
+  <label>Image (JPG, PNG ou WebP, 2 Mo maximum)<input type="file" name="image" accept="image/jpeg,image/png,image/webp"></label>
+  <fieldset>
+    <legend>Réponses (cochez les bonnes, laissez vide pour supprimer)</legend>
+    <% reponses.forEach((r, i) => { %>
+      <div class="ligne-reponse">
+        <input type="hidden" name="rid_<%= i %>" value="<%= r.id %>">
+        <input type="checkbox" name="correcte_<%= i %>" value="1" <%= r.est_correcte ? 'checked' : '' %> aria-label="Réponse <%= i + 1 %> correcte">
+        <input name="libelle_<%= i %>" value="<%= r.libelle %>" maxlength="500" aria-label="Réponse <%= i + 1 %>">
+      </div>
+    <% }) %>
+  </fieldset>
+  <label>Explication affichée après la réponse<textarea name="explication" rows="3"><%= question.explication || '' %></textarea></label>
+  <div class="actions">
+    <button class="btn" type="submit">Enregistrer</button>
+    <a class="btn btn-clair" href="/admin">Annuler</a>
+  </div>
+</form>
+<%- include('../partials/footer') %>

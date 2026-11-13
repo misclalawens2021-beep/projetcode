@@ -1,0 +1,11 @@
+<%- include('partials/header', { title: 'Inscription', carte: true }) %>
+<h1>Créer un compte</h1>
+<% if (erreur) { %><p class="flash flash-ko" role="alert"><%= erreur %></p><% } %>
+<form class="formulaire" method="post" action="/inscription">
+  <label>Pseudo<input name="pseudo" value="<%= valeurs.pseudo || '' %>" required minlength="3" maxlength="30"></label>
+  <label>Adresse e-mail<input type="email" name="email" value="<%= valeurs.email || '' %>" required autocomplete="email"></label>
+  <label>Mot de passe (8 caractères minimum)<input type="password" name="mot_de_passe" required minlength="8" autocomplete="new-password"></label>
+  <button class="btn" type="submit">Créer mon compte</button>
+</form>
+<p>Déjà inscrit ? <a href="/connexion">Se connecter</a></p>
+<%- include('partials/footer') %>

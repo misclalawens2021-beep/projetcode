@@ -1,0 +1,12 @@
+<%- include('partials/header', { title: 'Examen blanc', carte: true }) %>
+<h1>Examen blanc</h1>
+<ul class="regles">
+  <li><%= NB_EXAMEN %> questions tirées au hasard dans tous les thèmes</li>
+  <li>Les questions que vous n'avez pas encore vues sont servies en priorité</li>
+  <li>Temps limité à <%= DUREE_MIN %> minutes</li>
+  <li>Réussite à partir de <%= SEUIL_EXAMEN %> bonnes réponses sur <%= NB_EXAMEN %></li>
+  <li>Correction détaillée uniquement à la fin</li>
+</ul>
+<% if (nonVues !== null) { %><p class="discret">Il vous reste <strong><%= nonVues %></strong> question<%= nonVues > 1 ? 's' : '' %> jamais vue<%= nonVues > 1 ? 's' : '' %>.</p><% } %>
+<form method="post" action="/examen/demarrer"><button class="btn" type="submit">Lancer l'examen</button></form>
+<%- include('partials/footer') %>

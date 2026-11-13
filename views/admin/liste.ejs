@@ -1,0 +1,26 @@
+<%- include('../partials/header', { title: 'Gestion des questions', carte: true }) %>
+<h1>Questions</h1>
+<p><a class="btn" href="/admin/questions/nouvelle">Ajouter une question</a></p>
+<div class="defile"><table>
+  <thead><tr><th>Thème</th><th>Énoncé</th><th>État</th><th></th></tr></thead>
+  <tbody>
+    <% questions.forEach(q => { %>
+      <tr class="<%= q.actif ? '' : 'archive' %>">
+        <td><%= q.theme %></td>
+        <td><%= q.enonce.length > 90 ? q.enonce.slice(0, 90) + '…' : q.enonce %></td>
+        <td><%= q.actif ? 'Active' : 'Archivée' %></td>
+        <td class="ligne-actions">
+          <a href="/admin/questions/<%= q.id %>/modifier">Modifier</a>
+          <form method="post" action="/admin/questions/<%= q.id %>/archiver"><button class="btn-nu" type="submit"><%= q.actif ? 'Archiver' : 'Réactiver' %></button></form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table></div>
+<h2>Nouveau thème</h2>
+<form class="formulaire" method="post" action="/admin/themes">
+  <label>Nom<input name="nom" required maxlength="80"></label>
+  <label>Description<input name="description" maxlength="255"></label>
+  <button class="btn" type="submit">Créer le thème</button>
+</form>
+<%- include('../partials/footer') %>

@@ -1,0 +1,12 @@
+<%- include('partials/header', { title: c.titre, carte: true }) %>
+<p class="fil"><a href="/cours">← Tous les cours</a></p>
+<h1><%= c.titre %></h1>
+<article class="cours-contenu"><%- c.contenu %></article>
+<form method="post" action="/exercices/<%= c.theme_id %>/demarrer" class="actions">
+  <button class="btn" type="submit">S'entraîner sur ce thème</button>
+</form>
+<nav class="pagination" aria-label="Cours précédent et suivant">
+  <% if (precedent) { %><a class="btn btn-clair" href="/cours/<%= precedent.id %>">← Cours précédent</a><% } else { %><span></span><% } %>
+  <% if (suivant) { %><a class="btn btn-clair" href="/cours/<%= suivant.id %>">Cours suivant →</a><% } %>
+</nav>
+<%- include('partials/footer') %>

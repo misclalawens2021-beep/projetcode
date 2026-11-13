@@ -1,0 +1,17 @@
+<%- include('partials/header', { title: 'Exercices', carte: true }) %>
+<h1>Exercices par thème</h1>
+<p>Chaque série compte jusqu'à <%= NB_EXERCICE %> questions. La correction s'affiche après chaque réponse.</p>
+<ul class="themes">
+  <% themes.forEach(t => { %>
+    <li>
+      <div>
+        <h2><%= t.nom %></h2>
+        <p><%= t.description %> <span class="discret"><%= t.nb %> question<%= t.nb > 1 ? 's' : '' %></span></p>
+      </div>
+      <form method="post" action="/exercices/<%= t.id %>/demarrer">
+        <button class="btn" type="submit" <%= t.nb ? '' : 'disabled' %>>Commencer</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+<%- include('partials/footer') %>

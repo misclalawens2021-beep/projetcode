@@ -1,0 +1,10 @@
+<%- include('partials/header', { title: 'Connexion', carte: true }) %>
+<h1>Se connecter</h1>
+<% if (erreur) { %><p class="flash flash-ko" role="alert"><%= erreur %></p><% } %>
+<form class="formulaire" method="post" action="/connexion">
+  <label>Adresse e-mail<input type="email" name="email" value="<%= email %>" required autocomplete="email"></label>
+  <label>Mot de passe<input type="password" name="mot_de_passe" required autocomplete="current-password"></label>
+  <button class="btn" type="submit">Se connecter</button>
+</form>
+<p>Pas encore de compte ? <a href="/inscription">Créer un compte</a></p>
+<%- include('partials/footer') %>

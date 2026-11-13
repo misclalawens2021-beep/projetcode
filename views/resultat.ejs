@@ -1,0 +1,39 @@
+<%- include('partials/header', { title: 'Résultat' }) %>
+<h1 class="titre-centre">Résultat</h1>
+<section class="resultat">
+  <div class="score-carte <%= t.type === 'examen' ? (reussi ? 'ok' : 'ko') : '' %>"><span><%= t.score %> / <%= t.nb_questions %></span></div>
+  <div class="camembert" style="--pct: <%= pct %>" role="img" aria-label="<%= pct %> % de réussite">
+    <div class="note">Pourcentage de réussite<strong><%= pct %> %</strong></div>
+  </div>
+</section>
+<p class="verdict">
+  <% if (t.type === 'examen') { %>
+    <strong><%= reussi ? 'Examen réussi.' : 'Examen non réussi.' %></strong> Il fallait au moins <%= seuil %> bonnes réponses.
+  <% } else { %>
+    <%= t.score %> bonne<%= t.score > 1 ? 's' : '' %> réponse<%= t.score > 1 ? 's' : '' %> sur <%= t.nb_questions %>.
+  <% } %>
+</p>
+<div class="actions actions-centre">
+  <a class="btn" href="/profil">Voir mon profil</a>
+  <a class="btn" href="<%= t.type === 'examen' ? '/examen' : '/exercices' %>">Recommencer</a>
+</div>
+<h2 class="titre-centre">Correction</h2>
+<% qs.forEach(q => { %>
+  <article class="corrige <%= q.reussie ? 'corrige-ok' : 'corrige-ko' %>">
+    <% if (q.image) { %><img class="illustration" src="<%= q.image %>" alt="Illustration de la question"><% } %>
+    <div>
+      <h3>Question <%= q.position %> – <%= q.reussie ? 'réussie' : 'ratée' %></h3>
+      <p class="enonce"><%= q.enonce %></p>
+      <ul class="choix">
+        <% q.reponses.forEach(r => { %>
+          <li class="choix-item <%= r.est_correcte ? 'juste' : (r.choisie ? 'faux' : '') %>">
+            <span><%= r.libelle %></span>
+            <small><%= r.est_correcte ? 'Bonne réponse' : '' %><%= r.est_correcte && r.choisie ? ' · ' : '' %><%= r.choisie ? 'Votre choix' : '' %></small>
+          </li>
+        <% }) %>
+      </ul>
+      <% if (q.explication) { %><p class="explication"><%= q.explication %></p><% } %>
+    </div>
+  </article>
+<% }) %>
+<%- include('partials/footer') %>

@@ -1,0 +1,14 @@
+<%- include('partials/header', { title: 'Accueil', accueil: true }) %>
+<section class="hero">
+  <div class="hero-texte">
+    <h1>Préparez le code de la route, gratuitement.</h1>
+    <p>Des cours, exercices d'entraînement et examens blancs pour préparer votre code.</p>
+    <div class="actions actions-centre">
+      <a class="btn" href="/exercices">Commencer un exercice</a>
+      <a class="btn" href="/examen">Passer un examen</a>
+    </div>
+    <p class="chiffres-hero"><%= c.nbQuestions %> questions · <%= c.nbThemes %> thèmes · <a href="/cours">Voir les cours</a></p>
+  </div>
+  <img class="hero-image" src="/img/hero-route.jpg" alt="Vue depuis le poste de conduite sur une route de campagne, avec le GPS et la circulation devant">
+</section>
+<%- include('partials/footer') %>

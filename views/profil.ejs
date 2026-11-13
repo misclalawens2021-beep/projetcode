@@ -1,0 +1,48 @@
+<%- include('partials/header', { title: 'Profil', carte: true }) %>
+<h1>Profil</h1>
+<section class="chiffres">
+  <div><strong><%= ex.nb %></strong><span>examen<%= ex.nb > 1 ? 's' : '' %> passé<%= ex.nb > 1 ? 's' : '' %></span></div>
+  <div><strong><%= ex.nb ? Number(ex.moyenne).toFixed(1) : '–' %></strong><span>score moyen sur 40</span></div>
+  <div><strong><%= ex.nb ? ex.meilleur : '–' %></strong><span>meilleur score</span></div>
+</section>
+<section>
+  <h2>Questions à revoir</h2>
+  <% if (nbErreurs) { %>
+    <p>Vous avez <%= nbErreurs %> question<%= nbErreurs > 1 ? 's' : '' %> ratée<%= nbErreurs > 1 ? 's' : '' %> et pas encore réussie<%= nbErreurs > 1 ? 's' : '' %>.</p>
+    <form method="post" action="/revision/demarrer"><button class="btn" type="submit">Réviser mes erreurs</button></form>
+  <% } else { %>
+    <p>Aucune erreur en attente. Passez un exercice pour alimenter votre suivi.</p>
+  <% } %>
+</section>
+<section>
+  <h2>Réussite par thème</h2>
+  <% if (!themes.length) { %><p>Pas encore de données.</p><% } %>
+  <ul class="barres">
+    <% themes.forEach(th => { const p = Math.round(100 * th.ok / th.total); %>
+      <li>
+        <span><%= th.nom %></span>
+        <meter min="0" max="100" low="60" high="80" optimum="100" value="<%= p %>"><%= p %> %</meter>
+        <b><%= p %> %</b>
+      </li>
+    <% }) %>
+  </ul>
+</section>
+<section>
+  <h2>Derniers passages</h2>
+  <% if (dernieres.length) { %>
+  <div class="defile"><table>
+    <thead><tr><th>Date</th><th>Type</th><th>Score</th><th></th></tr></thead>
+    <tbody>
+      <% dernieres.forEach(d => { %>
+        <tr>
+          <td><%= new Date(d.fin).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+          <td><%= d.type === 'examen' ? 'Examen blanc' : (d.theme || 'Révision des erreurs') %></td>
+          <td><%= d.score %> / <%= d.nb_questions %></td>
+          <td><a href="/tentative/<%= d.id %>/resultat">Correction</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table></div>
+  <% } else { %><p>Aucun passage terminé pour l'instant.</p><% } %>
+</section>
+<%- include('partials/footer') %>

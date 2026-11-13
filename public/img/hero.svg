@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><defs><linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fd4f5"/><stop offset="1" stop-color="#d8f1fb"/></linearGradient></defs>
+<rect width="400" height="300" fill="url(#ciel)"/><circle cx="320" cy="62" r="28" fill="#ffd23f"/>
+<path d="M0 170 Q70 120 150 165 T300 150 T400 160 V300 H0 Z" fill="#8fcf7a"/><path d="M0 190 Q100 150 210 185 T400 180 V300 H0 Z" fill="#6fbd62"/>
+<polygon points="150,300 250,300 214,175 186,175" fill="#3d4551"/>
+<g stroke="#fff" stroke-width="5" stroke-linecap="round"><path d="M200 182 V194"/><path d="M200 208 V228"/><path d="M200 246 V276"/></g>
+<rect x="294" y="130" width="6" height="90" fill="#8a949f"/>
+<polygon points="297,86 327,142 267,142" fill="#fff" stroke="#c8102e" stroke-width="8" stroke-linejoin="round"/><rect x="294" y="105" width="6" height="20" fill="#111"/><circle cx="297" cy="133" r="3.6" fill="#111"/>
+<rect x="76" y="140" width="6" height="80" fill="#8a949f"/><circle cx="79" cy="118" r="30" fill="#0a4fa8" stroke="#fff" stroke-width="4"/><polygon points="79,98 66,116 75,116 75,138 83,138 83,116 92,116" fill="#fff"/>
+<g transform="translate(150 255)"><rect x="-34" y="-17" width="68" height="28" rx="9" fill="#c8102e"/><path d="M-18 -17 L-8 -36 H14 L26 -17 Z" fill="#c8102e"/><path d="M-12 -18 L-5 -32 H3 V-18 Z M7 -18 V-32 H13 L21 -18 Z" fill="#bcd4e6"/><circle cx="-18" cy="11" r="9" fill="#222"/><circle cx="18" cy="11" r="9" fill="#222"/></g></svg>

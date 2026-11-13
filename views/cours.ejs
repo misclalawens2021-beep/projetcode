@@ -1,0 +1,16 @@
+<%- include('partials/header', { title: 'Cours', carte: true }) %>
+<h1>Les cours</h1>
+<p>Lisez le cours d'un thème, puis entraînez-vous avec les exercices correspondants.</p>
+<ol class="liste-cours">
+  <% cours.forEach((c, i) => { %>
+    <li>
+      <span class="num"><%= i + 1 %></span>
+      <div>
+        <h2><a href="/cours/<%= c.id %>"><%= c.titre %></a></h2>
+        <p><%= c.resume %></p>
+      </div>
+      <a class="btn btn-petit" href="/cours/<%= c.id %>">Lire</a>
+    </li>
+  <% }) %>
+</ol>
+<%- include('partials/footer') %>

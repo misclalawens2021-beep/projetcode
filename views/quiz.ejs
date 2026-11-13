@@ -1,0 +1,10 @@
+<%- include('partials/header', { title: t.type === 'examen' ? 'Examen blanc' : 'Exercice' }) %>
+<div class="quiz-tete">
+  <h1><%= t.type === 'examen' ? 'Examen blanc' : 'Exercice' %></h1>
+  <% if (t.duree_max_sec) { %><p class="minuteur" id="minuteur" aria-live="off">--:--</p><% } %>
+</div>
+<div class="route" aria-hidden="true"><i id="progression"></i></div>
+<section id="quiz" class="question"></section>
+<script type="application/json" id="quiz-data"><%- json %></script>
+<script src="/js/quiz.js"></script>
+<%- include('partials/footer') %>
