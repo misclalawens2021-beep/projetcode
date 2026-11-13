@@ -2,7 +2,6 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const session = require('express-session');
-const { assurerColonnes } = require('./db/migrer');
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -39,6 +38,4 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT || 3000;
-assurerColonnes()
-  .catch((e) => console.error('Migration de la base :', e.message))
-  .finally(() => app.listen(port, () => console.log(`Code de la route : http://localhost:${port}`)));
+app.listen(port, () => console.log(`Code de la route : http://localhost:${port}`));

@@ -13,7 +13,6 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../config/db');
 const requetes = require('../db/pexels-requetes');
-const { assurerColonnes } = require('../db/migrer');
 
 const API = process.env.PEXELS_API_URL || 'https://api.pexels.com/v1/search';
 const DOSSIER = path.join(__dirname, '..', 'public', 'img', 'photos');
@@ -56,15 +55,14 @@ function ecrireCredits(credits) {
 
 (async () => {
   fs.mkdirSync(DOSSIER, { recursive: true });
-  await assurerColonnes();
   const credits = fs.existsSync(FICHIER_CREDITS) ? JSON.parse(fs.readFileSync(FICHIER_CREDITS, 'utf8')) : {};
-  const [lignes] = await db.query("SELECT id, image FROM question WHERE image LIKE '/img/questions/%' OR image LIKE '/img/photos/%' ORDER BY id");
+  const lignes = await db.all("SELECT id, image FROM question WHERE image LIKE '/img/questions/%' OR image LIKE '/img/photos/%' ORDER BY id");
 
   if (RESTAURER) {
     let n = 0;
     for (const l of lignes.filter((x) => x.image.startsWith('/img/photos/'))) {
       const k = cleDe(l.image);
-      await db.query('UPDATE question SET image = ?, credit = NULL, credit_url = NULL WHERE id = ?', [`/img/questions/${k}.svg`, l.id]);
+      await db.run('UPDATE question SET image = $1, credit = NULL, credit_url = NULL WHERE id = $2', [`/img/questions/${k}.svg`, l.id]);
       fs.rmSync(path.join(DOSSIER, `${k}.jpg`), { force: true });
       delete credits[k];
       n++;
@@ -98,7 +96,7 @@ function ecrireCredits(credits) {
         const photo = photos.find((p) => !utilisees.has(p.id) && p.width >= 900);
         if (!photo) { console.log(`– ${k} : aucune photo adaptée, le dessin est conservé`); bilan.sansResultat++; continue; }
         await telecharger(photo, path.join(DOSSIER, `${k}.jpg`));
-        await db.query('UPDATE question SET image = ?, credit = ?, credit_url = ? WHERE id = ?',
+        await db.run('UPDATE question SET image = $1, credit = $2, credit_url = $3 WHERE id = $4',
           [`/img/photos/${k}.jpg`, `Photo : ${photo.photographer} / Pexels`, photo.url, l.id]);
         credits[k] = { id: photo.id, photographe: photo.photographer, url: photo.url, requete };
         utilisees.add(photo.id);

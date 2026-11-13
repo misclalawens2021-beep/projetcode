@@ -1,54 +1,55 @@
-// Import (ou mise à jour) des thèmes, questions, images et cours.
+// Crée les tables si besoin, puis importe (ou met à jour) thèmes, questions, images et cours.
 // Relançable sans risque : une question déjà présente (même énoncé) est mise à jour, pas dupliquée.
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 const bcrypt = require('bcryptjs');
 const db = require('../config/db');
 const data = require('./questions');
 const cours = require('./cours');
-const { assurerColonnes } = require('./migrer');
 
 const IMG = '/img/questions/';
 
 (async () => {
-  await db.query(`CREATE TABLE IF NOT EXISTS cours (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    theme_id INT NOT NULL UNIQUE,
-    titre VARCHAR(160) NOT NULL,
-    resume VARCHAR(255) NOT NULL DEFAULT '',
-    contenu MEDIUMTEXT NOT NULL,
-    FOREIGN KEY (theme_id) REFERENCES theme(id) ON DELETE CASCADE)`);
-
-  await assurerColonnes();
+  await db.run(fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8'));
 
   let ajoutees = 0;
   for (const t of data) {
-    const [r] = await db.query(
-      'INSERT INTO theme(nom, description) VALUES (?, ?) ON DUPLICATE KEY UPDATE description = VALUES(description), id = LAST_INSERT_ID(id)',
-      [t.nom, t.description]);
-    const themeId = r.insertId;
+    const theme = await db.one(
+      `INSERT INTO theme(nom, description) VALUES ($1, $2)
+       ON CONFLICT (nom) DO UPDATE SET description = EXCLUDED.description RETURNING id`, [t.nom, t.description]);
     for (const q of t.questions) {
-      const [[existe]] = await db.query('SELECT id FROM question WHERE enonce = ? AND theme_id = ?', [q.enonce, themeId]);
+      const existe = await db.one('SELECT id FROM question WHERE enonce = $1 AND theme_id = $2', [q.enonce, theme.id]);
       if (existe) {
         // Une photo téléchargée (ou une image envoyée via l'admin) n'est jamais remplacée par le dessin
-        await db.query("UPDATE question SET explication = ?, image = IF(image IS NULL OR image LIKE '/img/questions/%', ?, image) WHERE id = ?", [q.explication, IMG + q.image, existe.id]);
+        await db.run(
+          `UPDATE question SET explication = $1,
+             image = CASE WHEN image IS NULL OR image LIKE '/img/questions/%' THEN $2 ELSE image END
+           WHERE id = $3`, [q.explication, IMG + q.image, existe.id]);
         continue;
       }
-      const [qr] = await db.query('INSERT INTO question(theme_id, enonce, explication, image) VALUES (?, ?, ?, ?)', [themeId, q.enonce, q.explication, IMG + q.image]);
-      await db.query('INSERT INTO reponse(question_id, libelle, est_correcte) VALUES ?', [q.reponses.map(([l, c]) => [qr.insertId, l, c])]);
+      const nouvelle = await db.one(
+        'INSERT INTO question(theme_id, enonce, explication, image) VALUES ($1, $2, $3, $4) RETURNING id',
+        [theme.id, q.enonce, q.explication, IMG + q.image]);
+      await db.run(
+        'INSERT INTO reponse(question_id, libelle, est_correcte) SELECT $1, x.l, x.c FROM unnest($2::text[], $3::boolean[]) AS x(l, c)',
+        [nouvelle.id, q.reponses.map((r) => r[0]), q.reponses.map((r) => r[1] === 1)]);
       ajoutees++;
     }
     const c = cours[t.nom];
     if (c) {
-      await db.query(
-        'INSERT INTO cours(theme_id, titre, resume, contenu) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE titre = VALUES(titre), resume = VALUES(resume), contenu = VALUES(contenu)',
-        [themeId, c.titre, c.resume, c.contenu]);
+      await db.run(
+        `INSERT INTO cours(theme_id, titre, resume, contenu) VALUES ($1, $2, $3, $4)
+         ON CONFLICT (theme_id) DO UPDATE SET titre = EXCLUDED.titre, resume = EXCLUDED.resume, contenu = EXCLUDED.contenu`,
+        [theme.id, c.titre, c.resume, c.contenu]);
     }
   }
   console.log(`${ajoutees} nouvelle(s) question(s) ajoutée(s), cours mis à jour.`);
 
   const email = process.env.ADMIN_EMAIL || 'admin@coderoute.local';
   const mdp = process.env.ADMIN_PASSWORD || 'ChangeMe123!';
-  await db.query("INSERT IGNORE INTO utilisateur(pseudo, email, mot_de_passe, role) VALUES ('Admin', ?, ?, 'admin')", [email, await bcrypt.hash(mdp, 10)]);
+  await db.run(
+    "INSERT INTO utilisateur(pseudo, email, mot_de_passe, role) VALUES ('Admin', $1, $2, 'admin') ON CONFLICT (email) DO NOTHING",
+    [email, await bcrypt.hash(mdp, 10)]);
   console.log(`Compte administrateur : ${email} (mot de passe défini dans .env)`);
-  await db.end();
-})().catch((e) => { console.error(e); process.exit(1); });
+})().catch((e) => { console.error(e.message); process.exitCode = 1; }).finally(() => db.end());
